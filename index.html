@@ -16,7 +16,9 @@
       scoreText,
       couchBot,
       couchTop,
-      coffeeTable;
+      coffeeTable,
+      ballTrack,
+      interact;
 
     function preload() {
       game.load.image('platform', 'assets/livingroom/hardwood.png');
@@ -27,6 +29,7 @@
       game.load.image('gudetama', 'assets/livingroom/gudetama.png');
       game.load.image('coffeeTable', 'assets/livingroom/coffee-table.png');
       game.load.image('map', 'assets/livingroom/map.png');
+      game.load.spritesheet('ballTrack', 'assets/livingroom/ball-track.png', 56, 24, 11);
     }
 
     function create() {
@@ -34,7 +37,13 @@
       //  We're going to be using physics, so enable the Arcade Physics system
       game.physics.startSystem(Phaser.Physics.ARCADE);
 
+      interact = game.input.keyboard.addKey(Phaser.Keyboard.E);
+
       game.stage.backgroundColor = '#f8f8f8';
+
+      ballTrack = game.add.sprite(200, 500, 'ballTrack', 1);
+      game.physics.enable(ballTrack, Phaser.Physics.ARCADE);
+      ballTrack.animations.add('loop');
 
       // Add couch bottom
       couchBot = game.add.sprite(300, 490, 'couchBottom');
@@ -111,6 +120,7 @@
     }
 
     function update() {
+
       //  Collide Rick with sprites
       game.physics.arcade.collide(player, platforms);
       game.physics.arcade.collide(player, couchBot);
@@ -146,6 +156,20 @@
       {
         player.body.velocity.y = -350;
       }
+
+      // Check for Rick to overlap with sprite and make something happen
+
+      game.physics.arcade.overlap(player, ballTrack, trackPlay, null, this);
+
+      function trackPlay(player, ballTrack) {
+        if (interact.isDown)
+        {
+          ballTrack.animations.play('loop', 11, false);
+          score += 50;
+          scoreText.text = 'Score: ' + score;
+        }
+      }
+
 
       // As well as doing this we will also check to see if the player overlaps with a star or not:
       // game.physics.arcade.overlap(player, stars, collectStar, null, this);
