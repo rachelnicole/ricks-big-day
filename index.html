@@ -164,10 +164,14 @@
       function trackPlay(player, ballTrack) {
         if (interact.isDown)
         {
-          ballTrack.animations.play('loop', 11, false);
-          score += 50;
-          scoreText.text = 'Score: ' + score;
+          return rickPlay();
         }
+      }
+
+      function rickPlay() {
+        ballTrack.animations.play('loop', 11, false);
+        score += 50;
+        scoreText.text = 'Score: ' + score;
       }
 
 
