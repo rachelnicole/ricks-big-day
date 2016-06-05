@@ -18,7 +18,8 @@
       couchTop,
       coffeeTable,
       ballTrack,
-      interact;
+      interact,
+      rickPlaying;
 
     function preload() {
       game.load.image('platform', 'assets/livingroom/hardwood.png');
@@ -37,11 +38,15 @@
       //  We're going to be using physics, so enable the Arcade Physics system
       game.physics.startSystem(Phaser.Physics.ARCADE);
 
+      game.world.setBounds(0,0, 4000, 600);
+
+      rickPlaying = false;
+
       interact = game.input.keyboard.addKey(Phaser.Keyboard.E);
 
       game.stage.backgroundColor = '#f8f8f8';
 
-      ballTrack = game.add.sprite(200, 500, 'ballTrack', 1);
+      ballTrack = game.add.sprite(200, 510, 'ballTrack', 1);
       game.physics.enable(ballTrack, Phaser.Physics.ARCADE);
       ballTrack.animations.add('loop');
 
@@ -98,7 +103,7 @@
       ground.body.immovable = true;
 
       // The player and its settings
-      player = game.add.sprite(152, game.world.height - 150, 'rick');
+      player = game.add.sprite(52, game.world.height - 150, 'rick');
 
       //  We need to enable physics on the player
       game.physics.arcade.enable(player);
@@ -106,7 +111,7 @@
       //  Player physics properties. Give the little guy a slight bounce.
       player.body.bounce.y = 0.1;
       player.body.gravity.y = 800;
-      player.body.collideWorldBounds = true;
+      player.body.collideWorldBounds = false;
 
       //  Our two animations, walking left and right.
       player.animations.add('left', [0, 1], 8, true);
@@ -114,7 +119,7 @@
 
       cursors = game.input.keyboard.createCursorKeys();
 
-      scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+      scoreText = game.add.text(16, 16, 'score: 0', { font: 'bold 30px BubbleButts', fill: '#000', });
 
 
     }
@@ -129,26 +134,29 @@
       //  Reset the players velocity (movement)
       player.body.velocity.x = 0;
 
-      if (cursors.left.isDown)
-      {
-        //  Move to the left
-        player.body.velocity.x = -150;
 
-        player.animations.play('left');
-      }
-      else if (cursors.right.isDown)
-      {
-        //  Move to the right
-        player.body.velocity.x = 150;
+      if (rickPlaying == false) {
+        if (cursors.left.isDown)
+        {
+          //  Move to the left
+          player.body.velocity.x = -150;
 
-        player.animations.play('right');
-      }
-      else
-      {
-        //  Stand still
-        player.animations.stop();
+          player.animations.play('left');
+        }
+        else if (cursors.right.isDown)
+        {
+          //  Move to the right
+          player.body.velocity.x = 150;
 
-        player.frame = 4;
+          player.animations.play('right');
+        }
+        else
+        {
+          //  Stand still
+          player.animations.stop();
+
+          player.frame = 4;
+        }
       }
 
       //  Allow the player to jump if they are touching the ground.
@@ -162,7 +170,7 @@
       game.physics.arcade.overlap(player, ballTrack, trackPlay, null, this);
 
       function trackPlay(player, ballTrack) {
-        if (interact.isDown)
+        if (interact.isDown && interact.repeats == 1)
         {
           return rickPlay();
         }
