@@ -22,6 +22,9 @@
       ballTrack,
       interact,
       isRickPlaying,
+      catTree1,
+      catTree2,
+      catTree3,
       camSpeed = 2;
 
     function preload() {
@@ -35,6 +38,9 @@
       game.load.image('map', 'assets/livingroom/map.png');
       game.load.spritesheet('ballTrack', 'assets/livingroom/ball-track.png', 56, 24, 11);
       game.load.image('catTree', 'assets/livingroom/cat-tree.png');
+      game.load.image('catTree1', 'assets/livingroom/platform-1.png');
+      game.load.image('catTree2', 'assets/livingroom/platform-2.png');
+      game.load.image('catTree3', 'assets/livingroom/platform-1.png');
     }
 
     function create() {
@@ -102,9 +108,41 @@
       couchTop.body.checkCollision.down = false;
       couchTop.body.immovable = true;
 
+      // Add all cat tree platforms
+      catTree1 = game.add.sprite(209, 466, 'catTree1');
+      catTree1.name = 'catTree1';
+      game.physics.enable(catTree1, Phaser.Physics.ARCADE);
+      catTree1.body.collideWorldBounds = true;
+      catTree1.body.checkCollision.up = true;
+      catTree1.body.checkCollision.left = false;
+      catTree1.body.checkCollision.right = false;
+      catTree1.body.checkCollision.down = false;
+      catTree1.body.immovable = true;
+
+      catTree2 = game.add.sprite(195, 436, 'catTree2');
+      catTree2.name = 'catTree2';
+      game.physics.enable(catTree2, Phaser.Physics.ARCADE);
+      catTree2.body.collideWorldBounds = true;
+      catTree2.body.checkCollision.up = true;
+      catTree2.body.checkCollision.left = false;
+      catTree2.body.checkCollision.right = false;
+      catTree2.body.checkCollision.down = false;
+      catTree2.body.immovable = true;
+
+      catTree3 = game.add.sprite(209, 404, 'catTree3');
+      catTree3.name = 'catTree3';
+      game.physics.enable(catTree3, Phaser.Physics.ARCADE);
+      catTree3.body.collideWorldBounds = true;
+      catTree3.body.checkCollision.up = true;
+      catTree3.body.checkCollision.left = false;
+      catTree3.body.checkCollision.right = false;
+      catTree3.body.checkCollision.down = false;
+      catTree3.body.immovable = true;
+
       // non-collision decorative sprites
       game.add.sprite(550, 400, 'gudetama');
       game.add.sprite(325, 230, 'map');
+      game.add.sprite(195, 342, 'catTree');
 
       // The player and its settings
       player = game.add.sprite(52, game.world.height - 150, 'rick');
@@ -126,7 +164,7 @@
       scoreText = game.add.text(16, 16, 'score: 0', { font: 'bold 30px BubbleButts', fill: '#000', });
       scoreText.fixedToCamera = true;
       
-      ballTrackCooldownText = game.add.text(140, 500, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      ballTrackCooldownText = game.add.text(140, 480, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
     }
 
     function update() {
@@ -135,6 +173,9 @@
       game.physics.arcade.collide(player, platforms);
       game.physics.arcade.collide(player, couchBot);
       game.physics.arcade.collide(player, couchTop);
+      game.physics.arcade.collide(player, catTree1);
+      game.physics.arcade.collide(player, catTree2);
+      game.physics.arcade.collide(player, catTree3);
 
       //  Reset the players velocity (movement)
       player.body.velocity.x = 0;
@@ -192,7 +233,7 @@
           ballTrackCooldown = 30 * 60; // 60fps, 30 seconds
           score += 50;
           scoreText.text = 'Score: ' + score;
-          ballTrackCooldownText.text = 'Ball track cooldown: ' + (ballTrackCooldown / 60);
+          ballTrackCooldownText.text = 'cooldown: ' + (ballTrackCooldown / 60);
           isRickPlaying = true;
           player.animations.play('left');
           setTimeout(function() {
