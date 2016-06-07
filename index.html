@@ -18,6 +18,8 @@
       ballTrackCooldownText,
       couchBot,
       couchTop,
+      chairBottom,
+      chairTop,
       coffeeTable,
       ballTrack,
       interact,
@@ -25,11 +27,14 @@
       catTree1,
       catTree2,
       catTree3,
+      lampTop,
+      lampBottom,
       camSpeed = 2;
 
     function preload() {
       game.load.image('platform', 'assets/livingroom/hardwood.png');
       game.load.image('ground', 'assets/livingroom/hardwood.png');
+      game.load.image('wallArt', 'assets/livingroom/wall-art.png');
       game.load.spritesheet('rick', 'assets/rick-spritee.png', 76, 44, 6);
       game.load.image('couchBottom', 'assets/livingroom/couch-bottom.png');
       game.load.image('couchTop', 'assets/livingroom/couch-top.png');
@@ -41,6 +46,10 @@
       game.load.image('catTree1', 'assets/livingroom/platform-1.png');
       game.load.image('catTree2', 'assets/livingroom/platform-2.png');
       game.load.image('catTree3', 'assets/livingroom/platform-1.png');
+      game.load.image('lampTop', 'assets/livingroom/lamp-top.png');
+      game.load.image('lampBottom', 'assets/livingroom/lamp-bottom.png');
+      game.load.image('chairTop', 'assets/livingroom/chair-top.png');
+      game.load.image('chairBottom', 'assets/livingroom/chair-bottom.png');
     }
 
     function create() {
@@ -71,9 +80,7 @@
       //  This stops it from falling away when you jump on it
       ground.body.immovable = true;
 
-      ballTrack = game.add.sprite(150, 520, 'ballTrack', 1);
-      game.physics.enable(ballTrack, Phaser.Physics.ARCADE);
-      ballTrack.animations.add('loop');
+      game.add.sprite(12, 200, 'wallArt');
 
       // Add couch bottom
       couchBot = game.add.sprite(300, 490, 'couchBottom');
@@ -86,17 +93,6 @@
       couchBot.body.checkCollision.down = false;
       couchBot.body.immovable = true;
 
-      // Add couch bottom
-      coffeeTable = game.add.sprite(340, 510, 'coffeeTable');
-      coffeeTable.name = 'coffeeTable';
-      game.physics.enable(coffeeTable, Phaser.Physics.ARCADE);
-      coffeeTable.body.collideWorldBounds = true;
-      coffeeTable.body.checkCollision.up = true;
-      coffeeTable.body.checkCollision.left = false;
-      coffeeTable.body.checkCollision.right = false;
-      coffeeTable.body.checkCollision.down = false;
-      coffeeTable.body.immovable = true;
-
       // Add couch top
       couchTop = game.add.sprite(300, 428, 'couchTop');
       couchTop.name = 'couchTop';
@@ -107,6 +103,41 @@
       couchTop.body.checkCollision.right = false;
       couchTop.body.checkCollision.down = false;
       couchTop.body.immovable = true;
+
+      // Add chair bottom
+      chairBottom = game.add.sprite(680, 490, 'chairBottom');
+      chairBottom.name = 'chairBottom';
+      game.physics.enable(chairBottom, Phaser.Physics.ARCADE);
+      chairBottom.body.collideWorldBounds = true;
+      chairBottom.body.checkCollision.up = true;
+      chairBottom.body.checkCollision.left = false;
+      chairBottom.body.checkCollision.right = false;
+      chairBottom.body.checkCollision.down = false;
+      chairBottom.body.immovable = true;
+
+      // Add chair top
+      chairTop = game.add.sprite(748, 436, 'chairTop');
+      chairTop.name = 'couchTop';
+      game.physics.enable(chairTop, Phaser.Physics.ARCADE);
+      chairTop.body.collideWorldBounds = true;
+      chairTop.body.checkCollision.up = true;
+      chairTop.body.checkCollision.left = true;
+      chairTop.body.checkCollision.right = true;
+      chairTop.body.checkCollision.down = false;
+      chairTop.body.immovable = true;
+
+      // Add lamp
+      game.add.sprite(620, 370, 'lampTop');
+
+      lampBottom = game.add.sprite(620, 488, 'lampBottom');
+      lampBottom.name = 'lampBottom';
+      game.physics.enable(lampBottom, Phaser.Physics.ARCADE);
+      lampBottom.body.collideWorldBounds = true;
+      lampBottom.body.checkCollision.up = true;
+      lampBottom.body.checkCollision.left = false;
+      lampBottom.body.checkCollision.right = false;
+      lampBottom.body.checkCollision.down = false;
+      lampBottom.body.immovable = true;
 
       // Add all cat tree platforms
       catTree1 = game.add.sprite(209, 466, 'catTree1');
@@ -147,6 +178,22 @@
       // The player and its settings
       player = game.add.sprite(52, game.world.height - 150, 'rick');
 
+      // Add sprites that rick goes behind here. 
+      ballTrack = game.add.sprite(150, 520, 'ballTrack', 1);
+      game.physics.enable(ballTrack, Phaser.Physics.ARCADE);
+      ballTrack.animations.add('loop');
+
+      // Add coffee table
+      coffeeTable = game.add.sprite(340, 510, 'coffeeTable');
+      coffeeTable.name = 'coffeeTable';
+      game.physics.enable(coffeeTable, Phaser.Physics.ARCADE);
+      coffeeTable.body.collideWorldBounds = true;
+      coffeeTable.body.checkCollision.up = true;
+      coffeeTable.body.checkCollision.left = false;
+      coffeeTable.body.checkCollision.right = false;
+      coffeeTable.body.checkCollision.down = false;
+      coffeeTable.body.immovable = true;
+
       //  We need to enable physics on the player
       game.physics.arcade.enable(player);
 
@@ -176,6 +223,9 @@
       game.physics.arcade.collide(player, catTree1);
       game.physics.arcade.collide(player, catTree2);
       game.physics.arcade.collide(player, catTree3);
+      game.physics.arcade.collide(player, lampBottom);
+      game.physics.arcade.collide(player, chairTop);
+      game.physics.arcade.collide(player, chairBottom);
 
       //  Reset the players velocity (movement)
       player.body.velocity.x = 0;
