@@ -17,9 +17,11 @@
       couchBot,
       couchTop,
       coffeeTable,
+      catTree,
       ballTrack,
       interact,
-      rickPlaying;
+      rickPlaying,
+      camSpeed = 1;
 
     function preload() {
       game.load.image('platform', 'assets/livingroom/hardwood.png');
@@ -30,6 +32,7 @@
       game.load.image('gudetama', 'assets/livingroom/gudetama.png');
       game.load.image('coffeeTable', 'assets/livingroom/coffee-table.png');
       game.load.image('map', 'assets/livingroom/map.png');
+      game.load.image('catTree', 'assets/livingroom/cat-tree.png');
       game.load.spritesheet('ballTrack', 'assets/livingroom/ball-track.png', 56, 24, 11);
     }
 
@@ -37,6 +40,21 @@
 
       //  We're going to be using physics, so enable the Arcade Physics system
       game.physics.startSystem(Phaser.Physics.ARCADE);
+
+      //  The platforms group contains the ground and the 2 ledges we can jump on
+      platforms = game.add.group();
+
+      //  We will enable physics for any object that is created in this group
+      platforms.enableBody = true;
+
+      // Here we create the ground.
+      var ground = platforms.create(0, game.world.height - 64, 'ground');
+
+      //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+      ground.scale.setTo(1, 1);
+
+      //  This stops it from falling away when you jump on it
+      ground.body.immovable = true;
 
       game.world.setBounds(0,0, 4000, 600);
 
@@ -46,7 +64,7 @@
 
       game.stage.backgroundColor = '#f8f8f8';
 
-      ballTrack = game.add.sprite(200, 510, 'ballTrack', 1);
+      ballTrack = game.add.sprite(150, 520, 'ballTrack', 1);
       game.physics.enable(ballTrack, Phaser.Physics.ARCADE);
       ballTrack.animations.add('loop');
 
@@ -86,21 +104,7 @@
       // non-collision decorative sprites
       game.add.sprite(550, 400, 'gudetama');
       game.add.sprite(325, 230, 'map');
-
-      //  The platforms group contains the ground and the 2 ledges we can jump on
-      platforms = game.add.group();
-
-      //  We will enable physics for any object that is created in this group
-      platforms.enableBody = true;
-
-      // Here we create the ground.
-      var ground = platforms.create(0, game.world.height - 64, 'ground');
-
-      //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-      ground.scale.setTo(1, 1);
-
-      //  This stops it from falling away when you jump on it
-      ground.body.immovable = true;
+      game.add.sprite(195, 342, 'catTree');
 
       // The player and its settings
       player = game.add.sprite(52, game.world.height - 150, 'rick');
@@ -111,7 +115,7 @@
       //  Player physics properties. Give the little guy a slight bounce.
       player.body.bounce.y = 0.1;
       player.body.gravity.y = 800;
-      player.body.collideWorldBounds = false;
+      player.body.collideWorldBounds = true;
 
       //  Our two animations, walking left and right.
       player.animations.add('left', [0, 1], 8, true);
@@ -138,6 +142,8 @@
       if (rickPlaying == false) {
         if (cursors.left.isDown)
         {
+
+          game.camera.x -= camSpeed;
           //  Move to the left
           player.body.velocity.x = -150;
 
@@ -145,6 +151,9 @@
         }
         else if (cursors.right.isDown)
         {
+
+          game.camera.x += camSpeed;
+
           //  Move to the right
           player.body.velocity.x = 150;
 
