@@ -59,7 +59,9 @@
       game.load.image('lampBottom', 'assets/livingroom/lamp-bottom.png');
       game.load.image('chairTop', 'assets/livingroom/chair-top.png');
       game.load.image('chairBottom', 'assets/livingroom/chair-bottom.png');
+      game.load.image('tv', 'assets/livingroom/tv.png');
       game.load.spritesheet('catDancer', 'assets/livingroom/cat-dancer.png', 42, 40, 3);
+      game.load.image('recordCabinet', 'assets/livingroom/record-cabinet.png');
     }
 
     function create() {
@@ -187,6 +189,17 @@
       catTree3.body.checkCollision.down = false;
       catTree3.body.immovable = true;
 
+      // Add couch bottom
+      recordCabinet = game.add.sprite(870, 476, 'recordCabinet');
+      recordCabinet.name = 'recordCabinet';
+      game.physics.enable(recordCabinet, Phaser.Physics.ARCADE);
+      recordCabinet.body.collideWorldBounds = true;
+      recordCabinet.body.checkCollision.up = true;
+      recordCabinet.body.checkCollision.left = false;
+      recordCabinet.body.checkCollision.right = false;
+      recordCabinet.body.checkCollision.down = false;
+      recordCabinet.body.immovable = true;
+
       // non-collision decorative sprites
       game.add.sprite(550, 400, 'gudetama');
       game.add.sprite(325, 230, 'map');
@@ -203,6 +216,8 @@
       catDancer = game.add.sprite(820, 500, 'catDancer', 0);
       game.physics.enable(catDancer, Phaser.Physics.ARCADE);
       catDancer.animations.add('loop');
+
+      game.add.sprite(874, 396, 'tv');
 
       // Add coffee table
       coffeeTable = game.add.sprite(340, 510, 'coffeeTable');
@@ -250,6 +265,7 @@
       game.physics.arcade.collide(player, lampBottom);
       game.physics.arcade.collide(player, chairTop);
       game.physics.arcade.collide(player, chairBottom);
+      game.physics.arcade.collide(player, recordCabinet);
 
       //  Reset the players velocity (movement)
       player.body.velocity.x = 0;
