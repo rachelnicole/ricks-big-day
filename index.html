@@ -20,6 +20,9 @@
       couchTop,
       chairBottom,
       chairTop,
+      couchScratch,
+      couchScratchCooldown = 0,
+      couchScratchCooldownText,
       coffeeTable,
       ballTrack,
       interact,
@@ -31,6 +34,9 @@
       lampTopCooldownText,
       lampTop,
       lampBottom,
+      catDancer,
+      catDancerCooldown = 0,
+      catDancerCooldownText,
       camSpeed = 2;
 
     function preload() {
@@ -39,6 +45,7 @@
       game.load.image('wallArt', 'assets/livingroom/wall-art.png');
       game.load.spritesheet('rick', 'assets/rick-spritee.png', 76, 44, 6);
       game.load.image('couchBottom', 'assets/livingroom/couch-bottom.png');
+      game.load.spritesheet('couchScratch', 'assets/livingroom/couch-scratch.png', 28, 42, 2);
       game.load.image('couchTop', 'assets/livingroom/couch-top.png');
       game.load.image('gudetama', 'assets/livingroom/gudetama.png');
       game.load.image('coffeeTable', 'assets/livingroom/coffee-table.png');
@@ -52,6 +59,7 @@
       game.load.image('lampBottom', 'assets/livingroom/lamp-bottom.png');
       game.load.image('chairTop', 'assets/livingroom/chair-top.png');
       game.load.image('chairBottom', 'assets/livingroom/chair-bottom.png');
+      game.load.spritesheet('catDancer', 'assets/livingroom/cat-dancer.png', 42, 40, 3);
     }
 
     function create() {
@@ -105,6 +113,11 @@
       couchTop.body.checkCollision.right = false;
       couchTop.body.checkCollision.down = false;
       couchTop.body.immovable = true;
+
+      // Add. 
+      couchScratch = game.add.sprite(300, 494, 'couchScratch', 0);
+      game.physics.enable(couchScratch, Phaser.Physics.ARCADE);
+      couchScratch.animations.add('loop');
 
       // Add chair bottom
       chairBottom = game.add.sprite(680, 490, 'chairBottom');
@@ -187,6 +200,10 @@
       game.physics.enable(ballTrack, Phaser.Physics.ARCADE);
       ballTrack.animations.add('loop');
 
+      catDancer = game.add.sprite(820, 500, 'catDancer', 0);
+      game.physics.enable(catDancer, Phaser.Physics.ARCADE);
+      catDancer.animations.add('loop');
+
       // Add coffee table
       coffeeTable = game.add.sprite(340, 510, 'coffeeTable');
       coffeeTable.name = 'coffeeTable';
@@ -217,6 +234,8 @@
       
       ballTrackCooldownText = game.add.text(140, 480, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
       lampTopCooldownText = game.add.text(610, 400, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      couchScratchCooldownText = game.add.text(240, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      catDancerCooldownText = game.add.text(820, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
     }
 
     function update() {
@@ -252,6 +271,22 @@
         lampTopCooldownText.text = '';
       }
 
+      if (couchScratchCooldown > 0) {
+        couchScratchCooldown -= 1;
+        couchScratchCooldownText.text = 'cooldown: ' + Math.round(couchScratchCooldown / 60);
+      }
+      else if (couchScratchCooldown == 0) {
+        couchScratchCooldownText.text = '';
+      }
+
+      if (catDancerCooldown > 0) {
+        catDancerCooldown -= 1;
+        catDancerCooldownText.text = 'cooldown: ' + Math.round(catDancerCooldown / 60);
+      }
+      else if (catDancerCooldown == 0) {
+        catDancerCooldownText.text = '';
+      }
+
       if (isRickPlaying == false) {
         if (cursors.left.isDown)
         {
@@ -285,6 +320,16 @@
         if (lampTopCooldown == 0) {
           // Check for Rick to overlap with sprite and make something happen
           game.physics.arcade.overlap(player, lampTop, lampPlay, null, this);
+        }
+
+        if (couchScratchCooldown == 0) {
+          // Check for Rick to overlap with sprite and make something happen
+          game.physics.arcade.overlap(player, couchScratch, couchScratchPlay, null, this);
+        }
+
+        if (catDancerCooldown == 0) {
+          // Check for Rick to overlap with sprite and make something happen
+          game.physics.arcade.overlap(player, catDancer, catDancerPlay, null, this);
         }
 
         //  Allow the player to jump if they are touching the ground.
@@ -326,6 +371,42 @@
           setTimeout(function() {
             player.animations.stop();
             lampTop.animations.stop();
+            isRickPlaying = false;
+          }, 3000);
+        }
+      }
+
+      function couchScratchPlay(player, couchScratch) {
+        if (interact.isDown && interact.repeats == 1)
+        {
+          couchScratch.animations.play('loop', 2, true);
+          couchScratchCooldown = 30 * 60; // 60fps, 30 seconds
+          score += 50;
+          scoreText.text = 'Score: ' + score;
+          couchScratchCooldownText.text = 'cooldown: ' + (couchScratchCooldown / 60);
+          isRickPlaying = true;
+          player.animations.play('left');
+          setTimeout(function() {
+            player.animations.stop();
+            couchScratch.animations.stop();
+            isRickPlaying = false;
+          }, 3000);
+        }
+      }
+
+      function catDancerPlay(player, catDancer) {
+        if (interact.isDown && interact.repeats == 1)
+        {
+          catDancer.animations.play('loop', 2, true);
+          catDancerCooldown = 30 * 60; // 60fps, 30 seconds
+          score += 50;
+          scoreText.text = 'Score: ' + score;
+          catDancerCooldownText.text = 'cooldown: ' + (catDancerCooldown / 60);
+          isRickPlaying = true;
+          player.animations.play('left');
+          setTimeout(function() {
+            player.animations.stop();
+            catDancer.animations.stop();
             isRickPlaying = false;
           }, 3000);
         }
