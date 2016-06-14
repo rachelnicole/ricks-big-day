@@ -27,6 +27,8 @@
       catTree1,
       catTree2,
       catTree3,
+      lampTopCooldown = 0,
+      lampTopCooldownText,
       lampTop,
       lampBottom,
       camSpeed = 2;
@@ -46,7 +48,7 @@
       game.load.image('catTree1', 'assets/livingroom/platform-1.png');
       game.load.image('catTree2', 'assets/livingroom/platform-2.png');
       game.load.image('catTree3', 'assets/livingroom/platform-1.png');
-      game.load.image('lampTop', 'assets/livingroom/lamp-top.png');
+      game.load.spritesheet('lampTop', 'assets/livingroom/lamp-top.png', 42, 118, 3);
       game.load.image('lampBottom', 'assets/livingroom/lamp-bottom.png');
       game.load.image('chairTop', 'assets/livingroom/chair-top.png');
       game.load.image('chairBottom', 'assets/livingroom/chair-bottom.png');
@@ -127,7 +129,9 @@
       chairTop.body.immovable = true;
 
       // Add lamp
-      game.add.sprite(620, 370, 'lampTop');
+      lampTop = game.add.sprite(620, 370, 'lampTop', 0);
+      game.physics.enable(lampTop, Phaser.Physics.ARCADE);
+      lampTop.animations.add('loop');
 
       lampBottom = game.add.sprite(620, 488, 'lampBottom');
       lampBottom.name = 'lampBottom';
@@ -212,6 +216,7 @@
       scoreText.fixedToCamera = true;
       
       ballTrackCooldownText = game.add.text(140, 480, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      lampTopCooldownText = game.add.text(610, 400, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
     }
 
     function update() {
@@ -237,6 +242,14 @@
       }
       else if (ballTrackCooldown == 0) {
         ballTrackCooldownText.text = '';
+      }
+
+      if (lampTopCooldown > 0) {
+        lampTopCooldown -= 1;
+        lampTopCooldownText.text = 'cooldown: ' + Math.round(lampTopCooldown / 60);
+      }
+      else if (lampTopCooldown == 0) {
+        lampTopCooldownText.text = '';
       }
 
       if (isRickPlaying == false) {
@@ -269,11 +282,17 @@
           game.physics.arcade.overlap(player, ballTrack, trackPlay, null, this);
         }
 
+        if (lampTopCooldown == 0) {
+          // Check for Rick to overlap with sprite and make something happen
+          game.physics.arcade.overlap(player, lampTop, lampPlay, null, this);
+        }
+
         //  Allow the player to jump if they are touching the ground.
         if (cursors.up.isDown && player.body.touching.down)
         {
           player.body.velocity.y = -350;
         }
+
       }
 
       function trackPlay(player, ballTrack) {
@@ -289,6 +308,24 @@
           setTimeout(function() {
             player.animations.stop();
             ballTrack.animations.stop();
+            isRickPlaying = false;
+          }, 3000);
+        }
+      }
+
+      function lampPlay(player, lampTop) {
+        if (interact.isDown && interact.repeats == 1)
+        {
+          lampTop.animations.play('loop', 3, true);
+          lampTopCooldown = 30 * 60; // 60fps, 30 seconds
+          score += 50;
+          scoreText.text = 'Score: ' + score;
+          lampTopCooldownText.text = 'cooldown: ' + (lampTopCooldown / 60);
+          isRickPlaying = true;
+          player.animations.play('left');
+          setTimeout(function() {
+            player.animations.stop();
+            lampTop.animations.stop();
             isRickPlaying = false;
           }, 3000);
         }
