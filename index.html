@@ -52,11 +52,14 @@
       fountain,
       catGrass,
       catGrassCooldown = 0,
-      catGrassCooldownText;
+      catGrassCooldownText,
+      hud,
+      lives,
+      livesText;
 
     function preload() {
-      game.load.image('platform', 'assets/livingroom/hardwood.png');
-      game.load.image('ground', 'assets/livingroom/hardwood.png');
+      game.load.image('platform', 'assets/livingroom/hardwoodd.png');
+      game.load.image('ground', 'assets/livingroom/hardwoodd.png');
       game.load.image('wallArt', 'assets/livingroom/wall-art.png');
       game.load.spritesheet('rick', 'assets/rick-spritee.png', 76, 44, 6);
       game.load.image('couchBottom', 'assets/livingroom/couch-bottom.png');
@@ -87,6 +90,9 @@
       game.load.image('rickBoxFront', 'assets/livingroom/rick-box-front.png');
       game.load.image('mixer', 'assets/livingroom/mixer.png');
       game.load.image('treats', 'assets/livingroom/treats.png');
+      game.load.image('hud', 'assets/livingroom/hud.png');
+      game.load.image('lives', 'assets/livingroom/lives.png');
+      game.load.image('livesText', 'assets/livingroom/lives-text.png');
       game.load.spritesheet('fountain', 'assets/livingroom/fountain.png', 38, 22, 3);
       game.load.spritesheet('catGrass', 'assets/livingroom/catgrass.png', 50, 22, 3);
     }
@@ -366,7 +372,16 @@
 
       cursors = game.input.keyboard.createCursorKeys();
 
-      scoreText = game.add.text(16, 16, 'score: 0', { font: 'bold 30px BubbleButts', fill: '#000', });
+      hud = game.add.sprite(1, 1, 'hud');
+      hud.fixedToCamera = true;
+
+      lives = game.add.sprite(650, 41, 'lives');
+      lives.fixedToCamera = true;
+      
+      livesText = game.add.sprite(684, 18, 'livesText');
+      livesText.fixedToCamera = true;
+
+      scoreText = game.add.text(16, 16, 'score: 0', { font: 'bold 18px BubbleButts', fill: '#fff', });
       scoreText.fixedToCamera = true;
       
       ballTrackCooldownText = game.add.text(740, 480, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
