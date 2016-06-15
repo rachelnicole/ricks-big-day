@@ -103,10 +103,10 @@
       //  This stops it from falling away when you jump on it
       ground.body.immovable = true;
 
-      game.add.sprite(312, 200, 'wallArt');
+      game.add.sprite(612, 200, 'wallArt');
 
       // Add couch bottom
-      couchBot = game.add.sprite(600, 490, 'couchBottom');
+      couchBot = game.add.sprite(900, 490, 'couchBottom');
       couchBot.name = 'couchBottom';
       game.physics.enable(couchBot, Phaser.Physics.ARCADE);
       couchBot.body.collideWorldBounds = true;
@@ -117,7 +117,7 @@
       couchBot.body.immovable = true;
 
       // Add couch top
-      couchTop = game.add.sprite(600, 428, 'couchTop');
+      couchTop = game.add.sprite(900, 428, 'couchTop');
       couchTop.name = 'couchTop';
       game.physics.enable(couchTop, Phaser.Physics.ARCADE);
       couchTop.body.collideWorldBounds = true;
@@ -128,12 +128,12 @@
       couchTop.body.immovable = true;
 
       // Add. 
-      couchScratch = game.add.sprite(600, 494, 'couchScratch', 0);
+      couchScratch = game.add.sprite(900, 494, 'couchScratch', 0);
       game.physics.enable(couchScratch, Phaser.Physics.ARCADE);
       couchScratch.animations.add('loop');
 
       // Add chair bottom
-      chairBottom = game.add.sprite(980, 490, 'chairBottom');
+      chairBottom = game.add.sprite(1280, 490, 'chairBottom');
       chairBottom.name = 'chairBottom';
       game.physics.enable(chairBottom, Phaser.Physics.ARCADE);
       chairBottom.body.collideWorldBounds = true;
@@ -144,7 +144,7 @@
       chairBottom.body.immovable = true;
 
       // Add chair top
-      chairTop = game.add.sprite(1048, 436, 'chairTop');
+      chairTop = game.add.sprite(1348, 436, 'chairTop');
       chairTop.name = 'couchTop';
       game.physics.enable(chairTop, Phaser.Physics.ARCADE);
       chairTop.body.collideWorldBounds = true;
@@ -155,7 +155,7 @@
       chairTop.body.immovable = true;
 
       // kitchen stuff
-      cabinetLeft = game.add.sprite(50, 436, 'cabinetLeft');
+      cabinetLeft = game.add.sprite(50, 434, 'cabinetLeft');
       cabinetLeft.name = 'cabinetLeft';
       game.physics.enable(cabinetLeft, Phaser.Physics.ARCADE);
       cabinetLeft.body.collideWorldBounds = true;
@@ -176,6 +176,16 @@
       ledge.body.checkCollision.right = true;
       ledge.body.checkCollision.down = false;
       ledge.body.immovable = true;
+      
+      cabinetRight = game.add.sprite(248, 434, 'cabinetRight');
+      cabinetRight.name = 'cabinetRight';
+      game.physics.enable(cabinetRight, Phaser.Physics.ARCADE);
+      cabinetRight.body.collideWorldBounds = true;
+      cabinetRight.body.checkCollision.up = true;
+      cabinetRight.body.checkCollision.left = false;
+      cabinetRight.body.checkCollision.right = false;
+      cabinetRight.body.checkCollision.down = false;
+      cabinetRight.body.immovable = true;
 
       fridge = game.add.sprite(138, 352, 'fridge');
       fridge.name = 'fridge';
@@ -187,12 +197,13 @@
       fridge.body.checkCollision.down = false;
       fridge.body.immovable = true;
 
+
       // Add lamp
-      lampTop = game.add.sprite(920, 370, 'lampTop', 0);
+      lampTop = game.add.sprite(1220, 370, 'lampTop', 0);
       game.physics.enable(lampTop, Phaser.Physics.ARCADE);
       lampTop.animations.add('loop');
 
-      lampBottom = game.add.sprite(920, 488, 'lampBottom');
+      lampBottom = game.add.sprite(1220, 488, 'lampBottom');
       lampBottom.name = 'lampBottom';
       game.physics.enable(lampBottom, Phaser.Physics.ARCADE);
       lampBottom.body.collideWorldBounds = true;
@@ -203,7 +214,7 @@
       lampBottom.body.immovable = true;
 
       // Add all cat tree platforms
-      catTree1 = game.add.sprite(509, 466, 'catTree1');
+      catTree1 = game.add.sprite(809, 466, 'catTree1');
       catTree1.name = 'catTree1';
       game.physics.enable(catTree1, Phaser.Physics.ARCADE);
       catTree1.body.collideWorldBounds = true;
@@ -213,7 +224,7 @@
       catTree1.body.checkCollision.down = false;
       catTree1.body.immovable = true;
 
-      catTree2 = game.add.sprite(495, 436, 'catTree2');
+      catTree2 = game.add.sprite(795, 436, 'catTree2');
       catTree2.name = 'catTree2';
       game.physics.enable(catTree2, Phaser.Physics.ARCADE);
       catTree2.body.collideWorldBounds = true;
@@ -223,7 +234,7 @@
       catTree2.body.checkCollision.down = false;
       catTree2.body.immovable = true;
 
-      catTree3 = game.add.sprite(509, 404, 'catTree3');
+      catTree3 = game.add.sprite(809, 404, 'catTree3');
       catTree3.name = 'catTree3';
       game.physics.enable(catTree3, Phaser.Physics.ARCADE);
       catTree3.body.collideWorldBounds = true;
@@ -234,7 +245,7 @@
       catTree3.body.immovable = true;
 
       // Add couch bottom
-      recordCabinet = game.add.sprite(1170, 476, 'recordCabinet');
+      recordCabinet = game.add.sprite(1470, 476, 'recordCabinet');
       recordCabinet.name = 'recordCabinet';
       game.physics.enable(recordCabinet, Phaser.Physics.ARCADE);
       recordCabinet.body.collideWorldBounds = true;
@@ -245,26 +256,26 @@
       recordCabinet.body.immovable = true;
 
       // non-collision decorative sprites
-      game.add.sprite(850, 400, 'gudetama');
-      game.add.sprite(625, 230, 'map');
-      game.add.sprite(495, 342, 'catTree');
+      game.add.sprite(1150, 400, 'gudetama');
+      game.add.sprite(925, 230, 'map');
+      game.add.sprite(795, 342, 'catTree');
 
       // The player and its settings
       player = game.add.sprite(52, game.world.height - 150, 'rick');
 
       // Add sprites that rick goes behind here. 
-      ballTrack = game.add.sprite(450, 520, 'ballTrack', 1);
+      ballTrack = game.add.sprite(750, 520, 'ballTrack', 1);
       game.physics.enable(ballTrack, Phaser.Physics.ARCADE);
       ballTrack.animations.add('loop');
 
-      catDancer = game.add.sprite(1120, 500, 'catDancer', 0);
+      catDancer = game.add.sprite(1420, 500, 'catDancer', 0);
       game.physics.enable(catDancer, Phaser.Physics.ARCADE);
       catDancer.animations.add('loop');
 
-      game.add.sprite(1174, 396, 'tv');
+      game.add.sprite(1474, 396, 'tv');
 
       // Add coffee table
-      coffeeTable = game.add.sprite(640, 510, 'coffeeTable');
+      coffeeTable = game.add.sprite(940, 510, 'coffeeTable');
       coffeeTable.name = 'coffeeTable';
       game.physics.enable(coffeeTable, Phaser.Physics.ARCADE);
       coffeeTable.body.collideWorldBounds = true;
@@ -291,10 +302,10 @@
       scoreText = game.add.text(16, 16, 'score: 0', { font: 'bold 30px BubbleButts', fill: '#000', });
       scoreText.fixedToCamera = true;
       
-      ballTrackCooldownText = game.add.text(440, 480, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
-      lampTopCooldownText = game.add.text(910, 400, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
-      couchScratchCooldownText = game.add.text(540, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
-      catDancerCooldownText = game.add.text(1120, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      ballTrackCooldownText = game.add.text(740, 480, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      lampTopCooldownText = game.add.text(1210, 400, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      couchScratchCooldownText = game.add.text(840, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      catDancerCooldownText = game.add.text(1420, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
     }
 
     function update() {
@@ -313,6 +324,7 @@
       game.physics.arcade.collide(player, cabinetLeft);
       game.physics.arcade.collide(player, ledge);
       game.physics.arcade.collide(player, fridge);
+      game.physics.arcade.collide(player, cabinetRight);
 
       //  Reset the players velocity (movement)
       player.body.velocity.x = 0;
