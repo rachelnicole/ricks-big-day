@@ -42,7 +42,17 @@
       cabinetRight,
       cabinetTop,
       fridge,
-      ledge;
+      ledge,
+      rickBoxBack,
+      rickBoxFront,
+      mixer,
+      treats,
+      treatsCooldown = 0,
+      treatsCooldownText,
+      fountain,
+      catGrass,
+      catGrassCooldown = 0,
+      catGrassCooldownText;
 
     function preload() {
       game.load.image('platform', 'assets/livingroom/hardwood.png');
@@ -73,6 +83,12 @@
       game.load.image('fridge', 'assets/livingroom/fridge.png');
       game.load.image('window', 'assets/livingroom/window.png');
       game.load.image('ledge', 'assets/livingroom/ledge.png');
+      game.load.image('rickBoxBack', 'assets/livingroom/rick-box-back.png');
+      game.load.image('rickBoxFront', 'assets/livingroom/rick-box-front.png');
+      game.load.image('mixer', 'assets/livingroom/mixer.png');
+      game.load.image('treats', 'assets/livingroom/treats.png');
+      game.load.spritesheet('fountain', 'assets/livingroom/fountain.png', 38, 22, 3);
+      game.load.spritesheet('catGrass', 'assets/livingroom/catgrass.png', 50, 22, 3);
     }
 
     function create() {
@@ -165,6 +181,16 @@
       cabinetLeft.body.checkCollision.down = false;
       cabinetLeft.body.immovable = true;
 
+      mixer = game.add.sprite(100, 398, 'mixer');
+      mixer.name = 'mixer';
+      game.physics.enable(mixer, Phaser.Physics.ARCADE);
+      mixer.body.collideWorldBounds = true;
+      mixer.body.checkCollision.up = true;
+      mixer.body.checkCollision.left = false;
+      mixer.body.checkCollision.right = false;
+      mixer.body.checkCollision.down = false;
+      mixer.body.immovable = true;
+
       game.add.sprite(0, 218, 'window');
 
       ledge = game.add.sprite(8, 472, 'ledge');
@@ -186,6 +212,16 @@
       cabinetRight.body.checkCollision.right = false;
       cabinetRight.body.checkCollision.down = false;
       cabinetRight.body.immovable = true;
+
+      cabinetTop = game.add.sprite(54, 300, 'cabinetTop');
+      cabinetTop.name = 'cabinetTop';
+      game.physics.enable(cabinetTop, Phaser.Physics.ARCADE);
+      cabinetTop.body.collideWorldBounds = true;
+      cabinetTop.body.checkCollision.up = true;
+      cabinetTop.body.checkCollision.left = false;
+      cabinetTop.body.checkCollision.right = false;
+      cabinetTop.body.checkCollision.down = false;
+      cabinetTop.body.immovable = true;
 
       fridge = game.add.sprite(138, 352, 'fridge');
       fridge.name = 'fridge';
@@ -259,6 +295,17 @@
       game.add.sprite(1150, 400, 'gudetama');
       game.add.sprite(925, 230, 'map');
       game.add.sprite(795, 342, 'catTree');
+      game.add.sprite(527, 516, 'rickBoxBack');
+
+      treats = game.add.sprite(254, 394, 'treats');
+      game.physics.enable(treats, Phaser.Physics.ARCADE);
+      treats.body.collideWorldBounds = true;
+      treats.body.checkCollision.up = true;
+      treats.body.checkCollision.left = false;
+      treats.body.checkCollision.right = false;
+      treats.body.checkCollision.down = false;
+      treats.body.immovable = true;
+
 
       // The player and its settings
       player = game.add.sprite(52, game.world.height - 150, 'rick');
@@ -267,6 +314,26 @@
       ballTrack = game.add.sprite(750, 520, 'ballTrack', 1);
       game.physics.enable(ballTrack, Phaser.Physics.ARCADE);
       ballTrack.animations.add('loop');
+
+      // Add sprites that rick goes behind here. 
+      fountain = game.add.sprite(440, 520, 'fountain', 1);
+      game.physics.enable(fountain, Phaser.Physics.ARCADE);
+      fountain.animations.add('loop');
+
+      // Add sprites that rick goes behind here. 
+      catGrass = game.add.sprite(370, 278, 'catGrass', 1);
+      game.physics.enable(catGrass, Phaser.Physics.ARCADE);
+      catGrass.animations.add('loop');
+
+      rickBoxFront = game.add.sprite(525, 516, 'rickBoxFront');
+      rickBoxFront.name = 'rickBoxFront';
+      game.physics.enable(rickBoxFront, Phaser.Physics.ARCADE);
+      rickBoxFront.body.collideWorldBounds = true;
+      rickBoxFront.body.checkCollision.up = false;
+      rickBoxFront.body.checkCollision.left = false;
+      rickBoxFront.body.checkCollision.right = false;
+      rickBoxFront.body.checkCollision.down = false;
+      rickBoxFront.body.immovable = true;
 
       catDancer = game.add.sprite(1420, 500, 'catDancer', 0);
       game.physics.enable(catDancer, Phaser.Physics.ARCADE);
@@ -306,9 +373,13 @@
       lampTopCooldownText = game.add.text(1210, 400, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
       couchScratchCooldownText = game.add.text(840, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
       catDancerCooldownText = game.add.text(1420, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      treatsCooldownText = game.add.text(254, 376, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      catGrassCooldownText = game.add.text(350, 240, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
     }
 
     function update() {
+
+      fountain.animations.play('loop', 3, true);
 
       //  Collide Rick with sprites
       game.physics.arcade.collide(player, platforms);
@@ -325,6 +396,10 @@
       game.physics.arcade.collide(player, ledge);
       game.physics.arcade.collide(player, fridge);
       game.physics.arcade.collide(player, cabinetRight);
+      game.physics.arcade.collide(player, cabinetTop);
+      game.physics.arcade.collide(player, rickBoxFront);
+      game.physics.arcade.collide(player, mixer);
+      game.physics.arcade.collide(player, treats);
 
       //  Reset the players velocity (movement)
       player.body.velocity.x = 0;
@@ -360,6 +435,22 @@
       }
       else if (catDancerCooldown == 0) {
         catDancerCooldownText.text = '';
+      }
+
+      if (treatsCooldown > 0) {
+        treatsCooldown -= 1;
+        treatsCooldownText.text = 'cooldown: ' + Math.round(treatsCooldown / 60);
+      }
+      else if (treatsCooldown == 0) {
+        treatsCooldownText.text = '';
+      }
+
+      if (catGrassCooldown > 0) {
+        catGrassCooldown -= 1;
+        catGrassCooldownText.text = 'cooldown: ' + Math.round(catGrassCooldown / 60);
+      }
+      else if (catGrassCooldown == 0) {
+        catGrassCooldownText.text = '';
       }
 
       if (isRickPlaying == false) {
@@ -405,6 +496,16 @@
         if (catDancerCooldown == 0) {
           // Check for Rick to overlap with sprite and make something happen
           game.physics.arcade.overlap(player, catDancer, catDancerPlay, null, this);
+        }
+
+        if (treatsCooldown == 0) {
+          // Check for Rick to overlap with sprite and make something happen
+          game.physics.arcade.overlap(player, treats, treatsPlay, null, this);
+        }
+
+        if (catGrassCooldown == 0) {
+          // Check for Rick to overlap with sprite and make something happen
+          game.physics.arcade.overlap(player, catGrass, catGrassPlay, null, this);
         }
 
         //  Allow the player to jump if they are touching the ground.
@@ -482,6 +583,40 @@
           setTimeout(function() {
             player.animations.stop();
             catDancer.animations.stop();
+            isRickPlaying = false;
+          }, 3000);
+        }
+      }
+
+      function treatsPlay(player, treats) {
+        if (interact.isDown && interact.repeats == 1)
+        {
+          treatsCooldown = 30 * 60; // 60fps, 30 seconds
+          score += 50;
+          scoreText.text = 'Score: ' + score;
+          treatsCooldownText.text = 'cooldown: ' + (treatsCooldown / 60);
+          isRickPlaying = true;
+          player.animations.play('left');
+          setTimeout(function() {
+            player.animations.stop();
+            isRickPlaying = false;
+          }, 3000);
+        }
+      }
+
+      function catGrassPlay(player, catGrass) {
+        if (interact.isDown && interact.repeats == 1)
+        {
+          catGrass.animations.play('loop', 3, true);
+          catGrassCooldown = 30 * 60; // 60fps, 30 seconds
+          score += 50;
+          scoreText.text = 'Score: ' + score;
+          catGrassCooldownText.text = 'cooldown: ' + (catGrassCooldown / 60);
+          isRickPlaying = true;
+          player.animations.play('left');
+          setTimeout(function() {
+            player.animations.stop();
+            catGrass.animations.stop();
             isRickPlaying = false;
           }, 3000);
         }
