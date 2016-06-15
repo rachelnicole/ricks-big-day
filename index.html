@@ -37,7 +37,12 @@
       catDancer,
       catDancerCooldown = 0,
       catDancerCooldownText,
-      camSpeed = 2;
+      camSpeed = 2,
+      cabinetLeft,
+      cabinetRight,
+      cabinetTop,
+      fridge,
+      ledge;
 
     function preload() {
       game.load.image('platform', 'assets/livingroom/hardwood.png');
@@ -62,6 +67,12 @@
       game.load.image('tv', 'assets/livingroom/tv.png');
       game.load.spritesheet('catDancer', 'assets/livingroom/cat-dancer.png', 42, 40, 3);
       game.load.image('recordCabinet', 'assets/livingroom/record-cabinet.png');
+      game.load.image('cabinetLeft', 'assets/livingroom/cabinet-l.png');
+      game.load.image('cabinetRight', 'assets/livingroom/cabinet-r.png');
+      game.load.image('cabinetTop', 'assets/livingroom/cabinet-top.png');
+      game.load.image('fridge', 'assets/livingroom/fridge.png');
+      game.load.image('window', 'assets/livingroom/window.png');
+      game.load.image('ledge', 'assets/livingroom/ledge.png');
     }
 
     function create() {
@@ -142,6 +153,39 @@
       chairTop.body.checkCollision.right = true;
       chairTop.body.checkCollision.down = false;
       chairTop.body.immovable = true;
+
+      // kitchen stuff
+      cabinetLeft = game.add.sprite(50, 436, 'cabinetLeft');
+      cabinetLeft.name = 'cabinetLeft';
+      game.physics.enable(cabinetLeft, Phaser.Physics.ARCADE);
+      cabinetLeft.body.collideWorldBounds = true;
+      cabinetLeft.body.checkCollision.up = true;
+      cabinetLeft.body.checkCollision.left = false;
+      cabinetLeft.body.checkCollision.right = false;
+      cabinetLeft.body.checkCollision.down = false;
+      cabinetLeft.body.immovable = true;
+
+      game.add.sprite(0, 218, 'window');
+
+      ledge = game.add.sprite(8, 472, 'ledge');
+      ledge.name = 'ledge';
+      game.physics.enable(ledge, Phaser.Physics.ARCADE);
+      ledge.body.collideWorldBounds = true;
+      ledge.body.checkCollision.up = true;
+      ledge.body.checkCollision.left = true;
+      ledge.body.checkCollision.right = true;
+      ledge.body.checkCollision.down = false;
+      ledge.body.immovable = true;
+
+      fridge = game.add.sprite(138, 352, 'fridge');
+      fridge.name = 'fridge';
+      game.physics.enable(fridge, Phaser.Physics.ARCADE);
+      fridge.body.collideWorldBounds = true;
+      fridge.body.checkCollision.up = true;
+      fridge.body.checkCollision.left = false;
+      fridge.body.checkCollision.right = false;
+      fridge.body.checkCollision.down = false;
+      fridge.body.immovable = true;
 
       // Add lamp
       lampTop = game.add.sprite(920, 370, 'lampTop', 0);
@@ -266,6 +310,9 @@
       game.physics.arcade.collide(player, chairTop);
       game.physics.arcade.collide(player, chairBottom);
       game.physics.arcade.collide(player, recordCabinet);
+      game.physics.arcade.collide(player, cabinetLeft);
+      game.physics.arcade.collide(player, ledge);
+      game.physics.arcade.collide(player, fridge);
 
       //  Reset the players velocity (movement)
       player.body.velocity.x = 0;
