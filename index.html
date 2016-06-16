@@ -49,13 +49,21 @@
       treats,
       treatsCooldown = 0,
       treatsCooldownText,
-      fountain,
       catGrass,
       catGrassCooldown = 0,
       catGrassCooldownText,
       hud,
       lives,
-      livesText;
+      livesText,
+      fountain,
+      fountainCooldown = 0,
+      fountainCooldownText,
+      scratchTree,
+      scratchTreeCooldown = 0,
+      scratchTreeCooldownText,
+      poop,
+      poopCooldown = 0,
+      poopCooldownText;
 
     function preload() {
       game.load.image('platform', 'assets/livingroom/hardwoodd.png');
@@ -95,6 +103,8 @@
       game.load.image('livesText', 'assets/livingroom/lives-text.png');
       game.load.spritesheet('fountain', 'assets/livingroom/fountain.png', 38, 22, 3);
       game.load.spritesheet('catGrass', 'assets/livingroom/catgrass.png', 50, 22, 3);
+      game.load.spritesheet('scratchTree', 'assets/livingroom/scratch-tree.png', 40, 54, 3);
+      game.load.spritesheet('poop', 'assets/livingroom/poop.png', 62, 60, 2);
     }
 
     function create() {
@@ -166,13 +176,13 @@
       chairBottom.body.immovable = true;
 
       // Add chair top
-      chairTop = game.add.sprite(1348, 436, 'chairTop');
+      chairTop = game.add.sprite(1280, 428, 'chairTop');
       chairTop.name = 'couchTop';
       game.physics.enable(chairTop, Phaser.Physics.ARCADE);
       chairTop.body.collideWorldBounds = true;
       chairTop.body.checkCollision.up = true;
-      chairTop.body.checkCollision.left = true;
-      chairTop.body.checkCollision.right = true;
+      chairTop.body.checkCollision.left = false;
+      chairTop.body.checkCollision.right = false;
       chairTop.body.checkCollision.down = false;
       chairTop.body.immovable = true;
 
@@ -286,8 +296,13 @@
       catTree3.body.checkCollision.down = false;
       catTree3.body.immovable = true;
 
+      // Add lamp
+      scratchTree = game.add.sprite(794, 474, 'scratchTree', 0);
+      game.physics.enable(scratchTree, Phaser.Physics.ARCADE);
+      scratchTree.animations.add('loop');
+
       // Add couch bottom
-      recordCabinet = game.add.sprite(1470, 476, 'recordCabinet');
+      recordCabinet = game.add.sprite(1570, 476, 'recordCabinet');
       recordCabinet.name = 'recordCabinet';
       game.physics.enable(recordCabinet, Phaser.Physics.ARCADE);
       recordCabinet.body.collideWorldBounds = true;
@@ -317,9 +332,13 @@
       player = game.add.sprite(52, game.world.height - 150, 'rick');
 
       // Add sprites that rick goes behind here. 
-      ballTrack = game.add.sprite(750, 520, 'ballTrack', 1);
+      ballTrack = game.add.sprite(690, 520, 'ballTrack', 1);
       game.physics.enable(ballTrack, Phaser.Physics.ARCADE);
       ballTrack.animations.add('loop');
+
+      poop = game.add.sprite(1800, 470, 'poop', 0);
+      game.physics.enable(poop, Phaser.Physics.ARCADE);
+      poop.animations.add('loop');
 
       // Add sprites that rick goes behind here. 
       fountain = game.add.sprite(440, 520, 'fountain', 1);
@@ -341,11 +360,11 @@
       rickBoxFront.body.checkCollision.down = false;
       rickBoxFront.body.immovable = true;
 
-      catDancer = game.add.sprite(1420, 500, 'catDancer', 0);
+      catDancer = game.add.sprite(1490, 500, 'catDancer', 0);
       game.physics.enable(catDancer, Phaser.Physics.ARCADE);
       catDancer.animations.add('loop');
 
-      game.add.sprite(1474, 396, 'tv');
+      game.add.sprite(1574, 396, 'tv');
 
       // Add coffee table
       coffeeTable = game.add.sprite(940, 510, 'coffeeTable');
@@ -384,12 +403,15 @@
       scoreText = game.add.text(16, 16, 'score: 0', { font: 'bold 18px BubbleButts', fill: '#fff', });
       scoreText.fixedToCamera = true;
       
-      ballTrackCooldownText = game.add.text(740, 480, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      ballTrackCooldownText = game.add.text(680, 480, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
       lampTopCooldownText = game.add.text(1210, 400, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
       couchScratchCooldownText = game.add.text(840, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
-      catDancerCooldownText = game.add.text(1420, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      catDancerCooldownText = game.add.text(1490, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
       treatsCooldownText = game.add.text(254, 376, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
       catGrassCooldownText = game.add.text(350, 240, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      fountainCooldownText = game.add.text(430, 480, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      scratchTreeCooldownText = game.add.text(790, 446, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      poopCooldownText = game.add.text(1800, 446, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
     }
 
     function update() {
@@ -415,6 +437,7 @@
       game.physics.arcade.collide(player, rickBoxFront);
       game.physics.arcade.collide(player, mixer);
       game.physics.arcade.collide(player, treats);
+      game.physics.arcade.collide(player, catGrass);
 
       //  Reset the players velocity (movement)
       player.body.velocity.x = 0;
@@ -466,6 +489,30 @@
       }
       else if (catGrassCooldown == 0) {
         catGrassCooldownText.text = '';
+      }
+
+      if (fountainCooldown > 0) {
+        fountainCooldown -= 1;
+        fountainCooldownText.text = 'cooldown: ' + Math.round(fountainCooldown / 60);
+      }
+      else if (fountainCooldown == 0) {
+        fountainCooldownText.text = '';
+      }
+
+      if (scratchTreeCooldown > 0) {
+        scratchTreeCooldown -= 1;
+        scratchTreeCooldownText.text = 'cooldown: ' + Math.round(scratchTreeCooldown / 60);
+      }
+      else if (scratchTreeCooldown == 0) {
+        scratchTreeCooldownText.text = '';
+      }
+
+      if (poopCooldown > 0) {
+        poopCooldown -= 1;
+        poopCooldownText.text = 'cooldown: ' + Math.round(poopCooldown / 60);
+      }
+      else if (poopCooldown == 0) {
+        poopCooldownText.text = '';
       }
 
       if (isRickPlaying == false) {
@@ -521,6 +568,21 @@
         if (catGrassCooldown == 0) {
           // Check for Rick to overlap with sprite and make something happen
           game.physics.arcade.overlap(player, catGrass, catGrassPlay, null, this);
+        }
+
+        if (fountainCooldown == 0) {
+          // Check for Rick to overlap with sprite and make something happen
+          game.physics.arcade.overlap(player, fountain, fountainPlay, null, this);
+        }
+
+        if (scratchTreeCooldown == 0) {
+          // Check for Rick to overlap with sprite and make something happen
+          game.physics.arcade.overlap(player, scratchTree, scratchTreePlay, null, this);
+        }
+
+        if (poopCooldown == 0) {
+          // Check for Rick to overlap with sprite and make something happen
+          game.physics.arcade.overlap(player, poop, poopPlay, null, this);
         }
 
         //  Allow the player to jump if they are touching the ground.
@@ -632,6 +694,58 @@
           setTimeout(function() {
             player.animations.stop();
             catGrass.animations.stop();
+            isRickPlaying = false;
+          }, 3000);
+        }
+      }
+
+      function fountainPlay(player, fountain) {
+        if (interact.isDown && interact.repeats == 1)
+        {
+          fountainCooldown = 30 * 60; // 60fps, 30 seconds
+          score += 50;
+          scoreText.text = 'Score: ' + score;
+          fountainCooldownText.text = 'cooldown: ' + (fountainCooldown / 60);
+          isRickPlaying = true;
+          player.animations.play('left');
+          setTimeout(function() {
+            player.animations.stop();
+            isRickPlaying = false;
+          }, 3000);
+        }
+      }
+
+      function scratchTreePlay(player, scratchTree) {
+        if (interact.isDown && interact.repeats == 1)
+        {
+          scratchTree.animations.play('loop', 3, true);
+          scratchTreeCooldown = 30 * 60; // 60fps, 30 seconds
+          score += 50;
+          scoreText.text = 'Score: ' + score;
+          scratchTreeCooldownText.text = 'cooldown: ' + (scratchTreeCooldown / 60);
+          isRickPlaying = true;
+          player.animations.play('left');
+          setTimeout(function() {
+            player.animations.stop();
+            scratchTree.animations.stop();
+            isRickPlaying = false;
+          }, 3000);
+        }
+      }
+
+      function poopPlay(player, poop) {
+        if (interact.isDown && interact.repeats == 1)
+        {
+          poop.animations.play('loop', 3, true);
+          poopCooldown = 30 * 60; // 60fps, 30 seconds
+          score += 50;
+          scoreText.text = 'Score: ' + score;
+          poopCooldownText.text = 'cooldown: ' + (poopCooldown / 60);
+          isRickPlaying = true;
+          player.animations.play('left');
+          setTimeout(function() {
+            player.animations.stop();
+            poop.animations.stop();
             isRickPlaying = false;
           }, 3000);
         }
