@@ -63,7 +63,10 @@
       scratchTreeCooldownText,
       poop,
       poopCooldown = 0,
-      poopCooldownText;
+      poopCooldownText,
+      feeder,
+      feederCooldown = 0,
+      feederCooldownText;
 
     function preload() {
       game.load.image('platform', 'assets/livingroom/hardwoodd.png');
@@ -104,7 +107,8 @@
       game.load.spritesheet('fountain', 'assets/livingroom/fountain.png', 38, 22, 3);
       game.load.spritesheet('catGrass', 'assets/livingroom/catgrass.png', 50, 22, 3);
       game.load.spritesheet('scratchTree', 'assets/livingroom/scratch-tree.png', 40, 54, 3);
-      game.load.spritesheet('poop', 'assets/livingroom/poop.png', 62, 60, 2);
+      game.load.spritesheet('poop', 'assets/livingroom/poop.png', 62, 60, 3);
+      game.load.spritesheet('feeder', 'assets/livingroom/feeder.png', 50, 64, 4);
     }
 
     function create() {
@@ -112,7 +116,7 @@
       //  We're going to be using physics, so enable the Arcade Physics system
       game.physics.startSystem(Phaser.Physics.ARCADE);
 
-      game.world.setBounds(0,0, 4000, 600);
+      game.world.setBounds(0,0, 2200, 600);
 
       isRickPlaying = false;
 
@@ -135,10 +139,10 @@
       //  This stops it from falling away when you jump on it
       ground.body.immovable = true;
 
-      game.add.sprite(612, 200, 'wallArt');
+      game.add.sprite(912, 200, 'wallArt');
 
       // Add couch bottom
-      couchBot = game.add.sprite(900, 490, 'couchBottom');
+      couchBot = game.add.sprite(1200, 490, 'couchBottom');
       couchBot.name = 'couchBottom';
       game.physics.enable(couchBot, Phaser.Physics.ARCADE);
       couchBot.body.collideWorldBounds = true;
@@ -149,7 +153,7 @@
       couchBot.body.immovable = true;
 
       // Add couch top
-      couchTop = game.add.sprite(900, 428, 'couchTop');
+      couchTop = game.add.sprite(1200, 428, 'couchTop');
       couchTop.name = 'couchTop';
       game.physics.enable(couchTop, Phaser.Physics.ARCADE);
       couchTop.body.collideWorldBounds = true;
@@ -160,12 +164,12 @@
       couchTop.body.immovable = true;
 
       // Add. 
-      couchScratch = game.add.sprite(900, 494, 'couchScratch', 0);
+      couchScratch = game.add.sprite(1200, 494, 'couchScratch', 0);
       game.physics.enable(couchScratch, Phaser.Physics.ARCADE);
       couchScratch.animations.add('loop');
 
       // Add chair bottom
-      chairBottom = game.add.sprite(1280, 490, 'chairBottom');
+      chairBottom = game.add.sprite(1580, 490, 'chairBottom');
       chairBottom.name = 'chairBottom';
       game.physics.enable(chairBottom, Phaser.Physics.ARCADE);
       chairBottom.body.collideWorldBounds = true;
@@ -176,7 +180,7 @@
       chairBottom.body.immovable = true;
 
       // Add chair top
-      chairTop = game.add.sprite(1280, 428, 'chairTop');
+      chairTop = game.add.sprite(1580, 428, 'chairTop');
       chairTop.name = 'couchTop';
       game.physics.enable(chairTop, Phaser.Physics.ARCADE);
       chairTop.body.collideWorldBounds = true;
@@ -249,13 +253,16 @@
       fridge.body.checkCollision.down = false;
       fridge.body.immovable = true;
 
+      feeder = game.add.sprite(560, 476, 'feeder', 0);
+      game.physics.enable(feeder, Phaser.Physics.ARCADE);
+      feeder.animations.add('loop');
 
       // Add lamp
-      lampTop = game.add.sprite(1220, 370, 'lampTop', 0);
+      lampTop = game.add.sprite(1520, 370, 'lampTop', 0);
       game.physics.enable(lampTop, Phaser.Physics.ARCADE);
       lampTop.animations.add('loop');
 
-      lampBottom = game.add.sprite(1220, 488, 'lampBottom');
+      lampBottom = game.add.sprite(1520, 488, 'lampBottom');
       lampBottom.name = 'lampBottom';
       game.physics.enable(lampBottom, Phaser.Physics.ARCADE);
       lampBottom.body.collideWorldBounds = true;
@@ -266,7 +273,7 @@
       lampBottom.body.immovable = true;
 
       // Add all cat tree platforms
-      catTree1 = game.add.sprite(809, 466, 'catTree1');
+      catTree1 = game.add.sprite(1109, 466, 'catTree1');
       catTree1.name = 'catTree1';
       game.physics.enable(catTree1, Phaser.Physics.ARCADE);
       catTree1.body.collideWorldBounds = true;
@@ -276,7 +283,7 @@
       catTree1.body.checkCollision.down = false;
       catTree1.body.immovable = true;
 
-      catTree2 = game.add.sprite(795, 436, 'catTree2');
+      catTree2 = game.add.sprite(1095, 436, 'catTree2');
       catTree2.name = 'catTree2';
       game.physics.enable(catTree2, Phaser.Physics.ARCADE);
       catTree2.body.collideWorldBounds = true;
@@ -286,7 +293,7 @@
       catTree2.body.checkCollision.down = false;
       catTree2.body.immovable = true;
 
-      catTree3 = game.add.sprite(809, 404, 'catTree3');
+      catTree3 = game.add.sprite(1109, 404, 'catTree3');
       catTree3.name = 'catTree3';
       game.physics.enable(catTree3, Phaser.Physics.ARCADE);
       catTree3.body.collideWorldBounds = true;
@@ -297,12 +304,12 @@
       catTree3.body.immovable = true;
 
       // Add lamp
-      scratchTree = game.add.sprite(794, 474, 'scratchTree', 0);
+      scratchTree = game.add.sprite(1094, 474, 'scratchTree', 0);
       game.physics.enable(scratchTree, Phaser.Physics.ARCADE);
       scratchTree.animations.add('loop');
 
       // Add couch bottom
-      recordCabinet = game.add.sprite(1570, 476, 'recordCabinet');
+      recordCabinet = game.add.sprite(1870, 476, 'recordCabinet');
       recordCabinet.name = 'recordCabinet';
       game.physics.enable(recordCabinet, Phaser.Physics.ARCADE);
       recordCabinet.body.collideWorldBounds = true;
@@ -313,10 +320,10 @@
       recordCabinet.body.immovable = true;
 
       // non-collision decorative sprites
-      game.add.sprite(1150, 400, 'gudetama');
-      game.add.sprite(925, 230, 'map');
-      game.add.sprite(795, 342, 'catTree');
-      game.add.sprite(527, 516, 'rickBoxBack');
+      game.add.sprite(1450, 400, 'gudetama');
+      game.add.sprite(1225, 230, 'map');
+      game.add.sprite(1095, 342, 'catTree');
+      game.add.sprite(727, 516, 'rickBoxBack');
 
       treats = game.add.sprite(254, 394, 'treats');
       game.physics.enable(treats, Phaser.Physics.ARCADE);
@@ -332,11 +339,11 @@
       player = game.add.sprite(52, game.world.height - 150, 'rick');
 
       // Add sprites that rick goes behind here. 
-      ballTrack = game.add.sprite(690, 520, 'ballTrack', 1);
+      ballTrack = game.add.sprite(990, 520, 'ballTrack', 1);
       game.physics.enable(ballTrack, Phaser.Physics.ARCADE);
       ballTrack.animations.add('loop');
 
-      poop = game.add.sprite(1800, 470, 'poop', 0);
+      poop = game.add.sprite(2100, 480, 'poop', 0);
       game.physics.enable(poop, Phaser.Physics.ARCADE);
       poop.animations.add('loop');
 
@@ -350,7 +357,7 @@
       game.physics.enable(catGrass, Phaser.Physics.ARCADE);
       catGrass.animations.add('loop');
 
-      rickBoxFront = game.add.sprite(525, 516, 'rickBoxFront');
+      rickBoxFront = game.add.sprite(725, 516, 'rickBoxFront');
       rickBoxFront.name = 'rickBoxFront';
       game.physics.enable(rickBoxFront, Phaser.Physics.ARCADE);
       rickBoxFront.body.collideWorldBounds = true;
@@ -360,14 +367,14 @@
       rickBoxFront.body.checkCollision.down = false;
       rickBoxFront.body.immovable = true;
 
-      catDancer = game.add.sprite(1490, 500, 'catDancer', 0);
+      catDancer = game.add.sprite(1790, 500, 'catDancer', 0);
       game.physics.enable(catDancer, Phaser.Physics.ARCADE);
       catDancer.animations.add('loop');
 
-      game.add.sprite(1574, 396, 'tv');
+      game.add.sprite(1874, 396, 'tv');
 
       // Add coffee table
-      coffeeTable = game.add.sprite(940, 510, 'coffeeTable');
+      coffeeTable = game.add.sprite(1240, 510, 'coffeeTable');
       coffeeTable.name = 'coffeeTable';
       game.physics.enable(coffeeTable, Phaser.Physics.ARCADE);
       coffeeTable.body.collideWorldBounds = true;
@@ -403,15 +410,16 @@
       scoreText = game.add.text(16, 16, 'score: 0', { font: 'bold 18px BubbleButts', fill: '#fff', });
       scoreText.fixedToCamera = true;
       
-      ballTrackCooldownText = game.add.text(680, 480, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
-      lampTopCooldownText = game.add.text(1210, 400, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
-      couchScratchCooldownText = game.add.text(840, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
-      catDancerCooldownText = game.add.text(1490, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      ballTrackCooldownText = game.add.text(980, 480, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      lampTopCooldownText = game.add.text(1510, 400, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      couchScratchCooldownText = game.add.text(1140, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      catDancerCooldownText = game.add.text(1790, 475, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
       treatsCooldownText = game.add.text(254, 376, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
       catGrassCooldownText = game.add.text(350, 240, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
       fountainCooldownText = game.add.text(430, 480, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
-      scratchTreeCooldownText = game.add.text(790, 446, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
-      poopCooldownText = game.add.text(1800, 446, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      scratchTreeCooldownText = game.add.text(1090, 446, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      poopCooldownText = game.add.text(2080, 446, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
+      feederCooldownText = game.add.text(550, 446, '', { font: 'Normal 12px Magic Forest', fill: '#000', });
     }
 
     function update() {
@@ -437,7 +445,6 @@
       game.physics.arcade.collide(player, rickBoxFront);
       game.physics.arcade.collide(player, mixer);
       game.physics.arcade.collide(player, treats);
-      game.physics.arcade.collide(player, catGrass);
 
       //  Reset the players velocity (movement)
       player.body.velocity.x = 0;
@@ -515,6 +522,14 @@
         poopCooldownText.text = '';
       }
 
+      if (feederCooldown > 0) {
+        feederCooldown -= 1;
+        feederCooldownText.text = 'cooldown: ' + Math.round(feederCooldown / 60);
+      }
+      else if (feederCooldown == 0) {
+        feederCooldownText.text = '';
+      }
+
       if (isRickPlaying == false) {
         if (cursors.left.isDown)
         {
@@ -583,6 +598,11 @@
         if (poopCooldown == 0) {
           // Check for Rick to overlap with sprite and make something happen
           game.physics.arcade.overlap(player, poop, poopPlay, null, this);
+        }
+
+        if (feederCooldown == 0) {
+          // Check for Rick to overlap with sprite and make something happen
+          game.physics.arcade.overlap(player, feeder, feederPlay, null, this);
         }
 
         //  Allow the player to jump if they are touching the ground.
@@ -746,6 +766,24 @@
           setTimeout(function() {
             player.animations.stop();
             poop.animations.stop();
+            isRickPlaying = false;
+          }, 3000);
+        }
+      }
+
+      function feederPlay(player, feeder) {
+        if (interact.isDown && interact.repeats == 1)
+        {
+          feeder.animations.play('loop', 4, true);
+          feederCooldown = 30 * 60; // 60fps, 30 seconds
+          score += 50;
+          scoreText.text = 'Score: ' + score;
+          feederCooldownText.text = 'cooldown: ' + (feederCooldown / 60);
+          isRickPlaying = true;
+          player.animations.play('left');
+          setTimeout(function() {
+            player.animations.stop();
+            feeder.animations.stop();
             isRickPlaying = false;
           }, 3000);
         }
