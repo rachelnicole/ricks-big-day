@@ -5,9 +5,8 @@ var Menu = {
         // The first argument is how our image will be refered to, 
         // the second one is the path to our file.
         game.load.image('title', 'assets/titlescreen/rbd-title.png');
-        game.load.image('instructions', 'assets/titlescreen/instructions.png');
+        game.load.image('startType', 'assets/titlescreen/start-type.png');
         game.load.spritesheet('rickSleep', 'assets/titlescreen/rick-sleep.png', 188, 86, 4);
-        game.load.spritesheet('start', 'assets/titlescreen/start.png', 48, 18, 2);
         game.load.audio('intro', ['intro.mp3', 'intro.ogg']);
     },
 
@@ -21,14 +20,15 @@ var Menu = {
       game.physics.enable(rickSleep, Phaser.Physics.ARCADE);
       rickSleep.animations.add('loop');
 
-      startButton = game.add.sprite(100, 520, 'start', 0);
-      game.physics.enable(startButton, Phaser.Physics.ARCADE);
+      this.add.sprite(318, 475, 'startType');
 
-      this.add.sprite(280, 575, 'instructions');
+      start = game.input.keyboard.addKey(Phaser.Keyboard.S);
 
       music = game.add.audio('intro');
-      music.loop = true;
       music.play();
+      setInterval(function() {
+        music.play();
+      }, 10600);
     },
 
     update: function () {
